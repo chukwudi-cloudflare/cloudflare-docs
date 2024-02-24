@@ -9,7 +9,7 @@ meta:
 
 [Next.js](https://nextjs.org) is an open-source React framework for creating websites and applications. In this guide, you will create a new Next.js application and deploy it using Cloudflare Pages.
 
-This guide will instruct you how to deploy a full-stack Next.js project which uses the [Edge Runtime](https://nextjs.org/docs/app/api-reference/edge).
+This guide will instruct you how to deploy a full-stack Next.js project which uses the [Edge Runtime](https://nextjs.org/docs/app/api-reference/edge), via the [`next-on-pages`](https://github.com/cloudflare/next-on-pages/tree/main/packages/next-on-pages/docs) adapter.
 
 ## Create a new project using the `create-cloudflare` CLI (C3)
 
@@ -170,6 +170,8 @@ Local and remote bindings can be accessed directly from `process.env`. The follo
 filename: app/api/hello/route.js
 highlight: [3]
 ---
+export const runtime = 'edge';
+
 export async function GET(request) {
   // this is the KV binding you defined in the config file
   const myKv = process.env.MY_KV;
@@ -189,6 +191,8 @@ export async function GET(request) {
 filename: app/api/hello/route.ts
 highlight: [3]
 ---
+export const runtime = 'edge';
+
 export async function GET(request: NextRequest) {
   // this is the KV binding you defined in the config file
   const myKv = process.env.MY_KV;
@@ -282,3 +286,9 @@ $ npx wrangler pages dev .vercel/output/static --compatibility-flag=nodejs_compa
 After you have previewed your application locally, you can deploy it to Cloudflare Pages (both via [Direct Uploads](/pages/get-started/direct-upload/) or [Git integration](/pages/configuration/git-integration/)) and iterate over the process to make new changes.
 
 {{<render file="/_framework-guides/_learn-more.md" withParameters="Next.js">}}
+
+### Troubleshooting
+
+- All server-side routes in your Next.js project must be configured as "Edge" runtime routes, by adding `export const runtime = 'edge';` to each individual route. Refer to the [`next-on-pages` docs](https://github.com/cloudflare/next-on-pages/blob/main/packages/next-on-pages/docs/examples.md) for more examples.
+- `next-on-pages` documents other common issues [here](https://github.com/cloudflare/next-on-pages/blob/main/packages/next-on-pages/docs/gotchas.md).
+
